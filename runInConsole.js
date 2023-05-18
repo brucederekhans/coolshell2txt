@@ -6,10 +6,9 @@ let textContent = document.querySelector(".entry-content").textContent
     .replace(lastChildDiv2TextContent, "")
     .replace(lastChildDiv3TextContent, "");
 let title = document.querySelector(".entry-title").textContent;
-let blob = new Blob([textContent], {type:"text/plain"});
-let anchorElement = document.createElement("a");
-anchorElement.href = URL.createObjectURL(blob);
-anchorElement.download = title;
-anchorElement.textContent = "save as";
-document.querySelector(".post-content").insertBefore(anchorElement, document.querySelector(".entry-content"));
-anchorElement.click();
+let textblob = new Blob([textContent], {type:"text/plain"});
+let textAnchorElement = document.createElement("a");
+textAnchorElement.href = URL.createObjectURL(textblob);
+textAnchorElement.download = title;
+textAnchorElement.textContent = "save as text";
+document.querySelector(".post-content").insertBefore(textAnchorElement, document.querySelector(".entry-content"));

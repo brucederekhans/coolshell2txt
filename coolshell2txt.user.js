@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CoolShell2txt
 // @namespace    https://github.com/brucederekhans/coolshell2txt
-// @version      0.2
+// @version      0.3
 // @description  save an article in coolshell.cn as text file
 // @author       brucederekhans
 // @match        *://coolshell.cn/articles/*
@@ -19,10 +19,10 @@
         .replace(lastChildDiv2TextContent, "")
         .replace(lastChildDiv3TextContent, "");
     let title = document.querySelector(".entry-title").textContent;
-    let blob = new Blob([textContent], {type:"text/plain"});
-    let anchorElement = document.createElement("a");
-    anchorElement.href = URL.createObjectURL(blob);
-    anchorElement.download = title;
-    anchorElement.textContent = "save as";
-    document.querySelector(".post-content").insertBefore(anchorElement, document.querySelector(".entry-content"));
+    let textblob = new Blob([textContent], {type:"text/plain"});
+    let textAnchorElement = document.createElement("a");
+    textAnchorElement.href = URL.createObjectURL(textblob);
+    textAnchorElement.download = title;
+    textAnchorElement.textContent = "save as text";
+    document.querySelector(".post-content").insertBefore(textAnchorElement, document.querySelector(".entry-content"));
 })();
