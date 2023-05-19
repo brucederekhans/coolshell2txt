@@ -16,6 +16,10 @@ document.querySelector(".post-content").insertBefore(textAnchorElement, document
 let turndownScriptElement = document.createElement("script");
 turndownScriptElement.addEventListener("load", function(){
     let turndownService = new TurndownService();
+    turndownService.addRule('deletelastChildDivs', {
+        filter: (node) => ((node.id === "wp_rp_first") || (node.classList.contains("post-ratings")) || (node.classList.contains("post-ratings-loading")) ),
+        replacement:() => ""
+    });
     let markdown = turndownService.turndown(document.querySelector(".entry-content").innerHTML);
     let markdownBlob = new Blob([markdown], {type:"text/markdown"});
     let markdownAnchorElement = document.createElement("a");
