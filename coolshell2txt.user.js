@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CoolShell2txt
 // @namespace    https://github.com/brucederekhans/coolshell2txt
-// @version      0.4
+// @version      0.5
 // @description  save an article in coolshell.cn as text file
 // @author       brucederekhans
 // @match        *://coolshell.cn/articles/*
@@ -28,6 +28,10 @@
     document.querySelector(".post-content").insertBefore(textAnchorElement, document.querySelector(".entry-content"));
 
     let turndownService = new TurndownService();
+    turndownService.addRule('deletelastChildDivs', {
+        filter: (node) => ((node.id === "wp_rp_first") || (node.classList.contains("post-ratings")) || (node.classList.contains("post-ratings-loading")) ),
+        replacement:() => ""
+    });
     let markdown = turndownService.turndown(document.querySelector(".entry-content").innerHTML);
     let markdownBlob = new Blob([markdown], {type:"text/markdown"});
     let markdownAnchorElement = document.createElement("a");
