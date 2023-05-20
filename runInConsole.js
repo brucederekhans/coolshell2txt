@@ -17,11 +17,11 @@ let turndownScriptElement = document.createElement("script");
 turndownScriptElement.addEventListener("load", function(){
     let turndownService = new TurndownService();
     turndownService.addRule('deletelastChildDivs', {
-        filter: (node) => ((node.id === "wp_rp_first") || (node.classList.contains("post-ratings")) || (node.classList.contains("post-ratings-loading")) ),
+        filter: (node) => ( (node.id === "wp_rp_first") || node.classList.contains("post-ratings") || node.classList.contains("post-ratings-loading") ),
         replacement:() => ""
     });
     let markdown = turndownService.turndown(document.querySelector(".entry-content").innerHTML);
-    let matchResults = [...markdown.matchAll(/!\[\]\((.+?)\)/g)];
+    let matchResults = [...markdown.matchAll(/!\[(.*?)\]\((.+?)\)/g)];
     let imageElement = new Image();
     imageElement.crossOrigin = "anonymous";
     let canvasElement = document.createElement("canvas");
@@ -29,7 +29,7 @@ turndownScriptElement.addEventListener("load", function(){
     let queueImagesLoading = Promise.resolve();
     matchResults.forEach(function(matchResult){
         queueImagesLoading = queueImagesLoading.then(() => new Promise(function(resolve, reject){
-            imageElement.src = matchResult[1];
+            imageElement.src = matchResult[2];
             imageElement.onload = resolve;
             imageElement.onerror = reject;
         })
@@ -37,7 +37,7 @@ turndownScriptElement.addEventListener("load", function(){
             canvasElement.width = imageElement.width;
             canvasElement.height = imageElement.height;
             context.drawImage(imageElement, 0, 0);
-            markdown = markdown.replaceAll(matchResult[0], "![](" + canvasElement.toDataURL() + ")");
+            markdown = markdown.replaceAll(matchResult[0], "![" + matchResult[1] + "](" + canvasElement.toDataURL() + ")");
         })
         .catch(() => undefined));
     });
