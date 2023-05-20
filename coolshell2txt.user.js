@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CoolShell2txt
 // @namespace    https://github.com/brucederekhans/coolshell2txt
-// @version      0.5
+// @version      0.6
 // @description  save an article in coolshell.cn as text file
 // @author       brucederekhans
 // @match        *://coolshell.cn/articles/*
@@ -33,10 +33,32 @@
         replacement:() => ""
     });
     let markdown = turndownService.turndown(document.querySelector(".entry-content").innerHTML);
-    let markdownBlob = new Blob([markdown], {type:"text/markdown"});
-    let markdownAnchorElement = document.createElement("a");
-    markdownAnchorElement.href = URL.createObjectURL(markdownBlob);
-    markdownAnchorElement.download = title + ".md";
-    markdownAnchorElement.textContent = "save as markdown";
-    document.querySelector(".post-content").insertBefore(markdownAnchorElement, document.querySelector(".entry-content"));
+    let matchResults = [...markdown.matchAll(/!\[\]\((.+?)\)/g)];
+    let imageElement = new Image();
+    imageElement.crossOrigin = "anonymous";
+    let canvasElement = document.createElement("canvas");
+    let context = canvasElement.getContext("2d");
+    let queueImagesLoading = Promise.resolve();
+    matchResults.forEach(function(matchResult){
+        queueImagesLoading = queueImagesLoading.then(() => new Promise(function(resolve, reject){
+            imageElement.src = matchResult[1];
+            imageElement.onload = resolve;
+            imageElement.onerror = reject;
+        })
+        .then(() => {
+            canvasElement.width = imageElement.width;
+            canvasElement.height = imageElement.height;
+            context.drawImage(imageElement, 0, 0);
+            markdown = markdown.replaceAll(matchResult[0], "![](" + canvasElement.toDataURL() + ")");
+        })
+        .catch(() => undefined));
+    });
+    queueImagesLoading.finally(() => {
+        let markdownBlob = new Blob([markdown], {type:"text/markdown"});
+        let markdownAnchorElement = document.createElement("a");
+        markdownAnchorElement.href = URL.createObjectURL(markdownBlob);
+        markdownAnchorElement.download = title + ".md";
+        markdownAnchorElement.textContent = "save as markdown";
+        document.querySelector(".post-content").insertBefore(markdownAnchorElement, document.querySelector(".entry-content"));
+    });
 })();
