@@ -21,7 +21,7 @@ turndownScriptElement.addEventListener("load", function(){
         replacement:() => ""
     });
     let markdown = turndownService.turndown(document.querySelector(".entry-content").innerHTML);
-    let matchResults = [...markdown.matchAll(/!\[(.*?)\]\((.+?)\)/g)];
+    let matchResults = [...markdown.matchAll(/!\[(.*?)\]\((.+?(\.(\w+))?)\)/g)];
     let imageElement = new Image();
     imageElement.crossOrigin = "anonymous";
     let canvasElement = document.createElement("canvas");
@@ -37,7 +37,20 @@ turndownScriptElement.addEventListener("load", function(){
             canvasElement.width = imageElement.width;
             canvasElement.height = imageElement.height;
             context.drawImage(imageElement, 0, 0);
-            markdown = markdown.replaceAll(matchResult[0], "![" + matchResult[1] + "](" + canvasElement.toDataURL() + ")");
+            markdown = markdown.replaceAll(matchResult[0], "![" + matchResult[1] + "](" + canvasElement.toDataURL(((extension) => {
+                switch(extension){
+                    case "jpg":
+                    case "jpeg":
+                        return "image/jpeg";
+                    case "gif":
+                        return "image/gif";
+                    case "webp":
+                        return "image/webp";
+                    case "png":
+                    default:
+                        return "image/png";
+                }
+            })(matchResult[4])) + ")");
         })
         .catch(() => undefined));
     });

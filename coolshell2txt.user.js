@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CoolShell2txt
 // @namespace    https://github.com/brucederekhans/coolshell2txt
-// @version      0.7
+// @version      0.8
 // @description  save an article in coolshell.cn as text file
 // @author       brucederekhans
 // @match        *://coolshell.cn/articles/*
@@ -33,7 +33,7 @@
         replacement:() => ""
     });
     let markdown = turndownService.turndown(document.querySelector(".entry-content").innerHTML);
-    let matchResults = [...markdown.matchAll(/!\[(.*?)\]\((.+?)\)/g)];
+    let matchResults = [...markdown.matchAll(/!\[(.*?)\]\((.+?(\.(\w+))?)\)/g)];
     let imageElement = new Image();
     imageElement.crossOrigin = "anonymous";
     let canvasElement = document.createElement("canvas");
@@ -49,7 +49,20 @@
             canvasElement.width = imageElement.width;
             canvasElement.height = imageElement.height;
             context.drawImage(imageElement, 0, 0);
-            markdown = markdown.replaceAll(matchResult[0], "![" + matchResult[1] + "](" + canvasElement.toDataURL() + ")");
+            markdown = markdown.replaceAll(matchResult[0], "![" + matchResult[1] + "](" + canvasElement.toDataURL(((extension) => {
+                switch(extension){
+                    case "jpg":
+                    case "jpeg":
+                        return "image/jpeg";
+                    case "gif":
+                        return "image/gif";
+                    case "webp":
+                        return "image/webp";
+                    case "png":
+                    default:
+                        return "image/png";
+                }
+            })(matchResult[4])) + ")");
         })
         .catch(() => undefined));
     });
