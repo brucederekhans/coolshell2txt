@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CoolShell2txt
 // @namespace    https://github.com/brucederekhans/coolshell2txt
-// @version      0.9
+// @version      0.10
 // @description  save an article in coolshell.cn as text file
 // @author       brucederekhans
 // @match        *://coolshell.cn/articles/*
@@ -34,7 +34,7 @@
     });
     turndownService.addRule('backquoteCodeBlocks', {
         filter: (node) => node.classList.contains("EnlighterJSRAW"),
-        replacement:(content, node) => ("```\n" + node.textContent + "\n```")
+        replacement:(content, node) => ("```" + node.dataset.enlighterLanguage + "\n" + node.textContent + "\n```")
     });
     let markdown = turndownService.turndown(document.querySelector(".entry-content").innerHTML);
     let matchResults = [...markdown.matchAll(/!\[(.*?)\]\((.+?(\.(\w+))?)\)/g)];
