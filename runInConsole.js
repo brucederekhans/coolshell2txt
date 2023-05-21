@@ -39,6 +39,17 @@ turndownScriptElement.addEventListener("load", function(){
             context.drawImage(imageElement, 0, 0);
             markdown = markdown.replaceAll(matchResult[0], "![" + matchResult[1] + "](" + canvasElement.toDataURL(((extension) => {
                 switch(extension){
+                    case "avif":
+                        return "image/avif";
+                    case "bmp":
+                        return "image/bmp";
+                    case "ico":
+                        return "image/vnd.microsoft.icon";
+                    case "svg":
+                        return "image/svg+xml";
+                    case "tif":
+                    case "tiff":
+                        return "image/tiff";
                     case "jpg":
                     case "jpeg":
                         return "image/jpeg";
