@@ -42,7 +42,7 @@ turndownScriptElement.addEventListener("load", function(){
             canvasElement.height = imageElement.height;
             context.drawImage(imageElement, 0, 0);
             markdown = markdown.replaceAll(matchResult[0], "![" + matchResult[1] + "](" + canvasElement.toDataURL(((extension) => {
-                switch(extension){
+                switch(extension.toLowerCase()){
                     case "avif":
                         return "image/avif";
                     case "bmp":
