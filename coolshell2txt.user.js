@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CoolShell2txt
 // @namespace    https://github.com/brucederekhans/coolshell2txt
-// @version      0.10
+// @version      0.11
 // @description  save an article in coolshell.cn as text file
 // @author       brucederekhans
 // @match        *://coolshell.cn/articles/*
@@ -54,7 +54,7 @@
             canvasElement.height = imageElement.height;
             context.drawImage(imageElement, 0, 0);
             markdown = markdown.replaceAll(matchResult[0], "![" + matchResult[1] + "](" + canvasElement.toDataURL(((extension) => {
-                switch(extension){
+                switch(extension.toLowerCase()){
                     case "avif":
                         return "image/avif";
                     case "bmp":
