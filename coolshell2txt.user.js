@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         CoolShell2txt
 // @namespace    https://github.com/brucederekhans/coolshell2txt
-// @version      0.11
+// @version      0.12
 // @description  save an article in coolshell.cn as text file
 // @author       brucederekhans
-// @match        *://coolshell.cn/articles/*
+// @match        *://coolshell.cn/articles/*.html
 // @require      https://unpkg.com/turndown/dist/turndown.js
 // @grant        none
 // ==/UserScript==
@@ -28,7 +28,7 @@
     document.querySelector(".post-content").insertBefore(textAnchorElement, document.querySelector(".entry-content"));
 
     let turndownService = new TurndownService();
-    turndownService.addRule('deletelastChildDivs', {
+    turndownService.addRule('deleteLastChildDivs', {
         filter: (node) => ( (node.id === "wp_rp_first") || node.classList.contains("post-ratings") || node.classList.contains("post-ratings-loading") ),
         replacement:() => ""
     });
