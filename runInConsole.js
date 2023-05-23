@@ -13,6 +13,9 @@ textAnchorElement.download = title;
 textAnchorElement.textContent = "save as text";
 document.querySelector(".post-content").insertBefore(textAnchorElement, document.querySelector(".entry-content"));
 
+let markdownAnchorElement = document.createElement("a");
+markdownAnchorElement.textContent = "save as markdown";
+document.querySelector(".post-content").insertBefore(markdownAnchorElement, document.querySelector(".entry-content"));
 let turndownScriptElement = document.createElement("script");
 turndownScriptElement.addEventListener("load", function(){
     let turndownService = new TurndownService();
@@ -71,11 +74,8 @@ turndownScriptElement.addEventListener("load", function(){
     });
     queueImagesLoading.finally(() => {
         let markdownBlob = new Blob([markdown], {type:"text/markdown"});
-        let markdownAnchorElement = document.createElement("a");
         markdownAnchorElement.href = URL.createObjectURL(markdownBlob);
         markdownAnchorElement.download = title + ".md";
-        markdownAnchorElement.textContent = "save as markdown";
-        document.querySelector(".post-content").insertBefore(markdownAnchorElement, document.querySelector(".entry-content"));
     });
 });
 turndownScriptElement.src = "https://unpkg.com/turndown/dist/turndown.js";
