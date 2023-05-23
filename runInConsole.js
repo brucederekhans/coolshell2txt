@@ -16,7 +16,7 @@ document.querySelector(".post-content").insertBefore(textAnchorElement, document
 let turndownScriptElement = document.createElement("script");
 turndownScriptElement.addEventListener("load", function(){
     let turndownService = new TurndownService();
-    turndownService.addRule('deletelastChildDivs', {
+    turndownService.addRule('deleteLastChildDivs', {
         filter: (node) => ( (node.id === "wp_rp_first") || node.classList.contains("post-ratings") || node.classList.contains("post-ratings-loading") ),
         replacement:() => ""
     });
