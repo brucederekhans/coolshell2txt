@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CoolShell2txt
 // @namespace    https://github.com/brucederekhans/coolshell2txt
-// @version      0.15
+// @version      0.16
 // @description  save an article in coolshell.cn as text file
 // @author       brucederekhans
 // @match        *://coolshell.cn/articles/*.html
@@ -12,10 +12,31 @@
 (function() {
     'use strict';
 
+    let styleElement = document.createElement("style");
+    styleElement.textContent = `
+    #downloadLinksContainer{
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 4em;
+    }
+    #downloadLinksContainer a{
+        margin: 1.5vh;
+        padding: 1vh;
+        font-size: 2.5vh;
+        border: 2px solid;
+        color: #607d8b;
+        background-color: #ffffff;
+        transition: color, background-color 0.5s;
+    }
+    #downloadLinksContainer a:hover{
+        color: #ffffff;
+        background-color: #607d8b;
+    }
+    `;
+    document.body.appendChild(styleElement);
+
     let anchorsContainerElement = document.createElement("div");
-    anchorsContainerElement.style.display = "flex";
-    anchorsContainerElement.style.justifyContent = "flex-end";
-    anchorsContainerElement.style.padding = "0 4em";
+    anchorsContainerElement.id = "downloadLinksContainer";
     document.querySelector(".post-content").insertBefore(anchorsContainerElement, document.querySelector(".entry-content"));
 
     let lastChildDiv1TextContent = document.querySelector(".entry-content > div:nth-last-child(1)").textContent;
@@ -31,18 +52,10 @@
     textAnchorElement.href = URL.createObjectURL(textBlob);
     textAnchorElement.download = title;
     textAnchorElement.textContent = "save as text";
-    textAnchorElement.style.margin = "3vh";
-    textAnchorElement.style.padding = "2vh";
-    textAnchorElement.style.fontSize = "5vh";
-    textAnchorElement.style.border = "2px solid";
     anchorsContainerElement.appendChild(textAnchorElement);
 
     let markdownAnchorElement = document.createElement("a");
     markdownAnchorElement.textContent = "fetching markdown";
-    markdownAnchorElement.style.margin = "3vh";
-    markdownAnchorElement.style.padding = "2vh";
-    markdownAnchorElement.style.fontSize = "5vh";
-    markdownAnchorElement.style.border = "2px solid";
     anchorsContainerElement.appendChild(markdownAnchorElement);
     let turndownService = new TurndownService();
     turndownService.addRule('deleteLastChildDivs', {
