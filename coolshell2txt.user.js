@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CoolShell2txt
 // @namespace    https://github.com/brucederekhans/coolshell2txt
-// @version      0.14
+// @version      0.15
 // @description  save an article in coolshell.cn as text file
 // @author       brucederekhans
 // @match        *://coolshell.cn/articles/*.html
@@ -11,6 +11,12 @@
 
 (function() {
     'use strict';
+
+    let anchorsContainerElement = document.createElement("div");
+    anchorsContainerElement.style.display = "flex";
+    anchorsContainerElement.style.justifyContent = "flex-end";
+    anchorsContainerElement.style.padding = "0 4em";
+    document.querySelector(".post-content").insertBefore(anchorsContainerElement, document.querySelector(".entry-content"));
 
     let lastChildDiv1TextContent = document.querySelector(".entry-content > div:nth-last-child(1)").textContent;
     let lastChildDiv2TextContent = document.querySelector(".entry-content > div:nth-last-child(2)").textContent;
@@ -25,11 +31,19 @@
     textAnchorElement.href = URL.createObjectURL(textBlob);
     textAnchorElement.download = title;
     textAnchorElement.textContent = "save as text";
-    document.querySelector(".post-content").insertBefore(textAnchorElement, document.querySelector(".entry-content"));
+    textAnchorElement.style.margin = "3vh";
+    textAnchorElement.style.padding = "2vh";
+    textAnchorElement.style.fontSize = "5vh";
+    textAnchorElement.style.border = "2px solid";
+    anchorsContainerElement.appendChild(textAnchorElement);
 
     let markdownAnchorElement = document.createElement("a");
     markdownAnchorElement.textContent = "fetching markdown";
-    document.querySelector(".post-content").insertBefore(markdownAnchorElement, document.querySelector(".entry-content"));
+    markdownAnchorElement.style.margin = "3vh";
+    markdownAnchorElement.style.padding = "2vh";
+    markdownAnchorElement.style.fontSize = "5vh";
+    markdownAnchorElement.style.border = "2px solid";
+    anchorsContainerElement.appendChild(markdownAnchorElement);
     let turndownService = new TurndownService();
     turndownService.addRule('deleteLastChildDivs', {
         filter: (node) => ( (node.id === "wp_rp_first") || node.classList.contains("post-ratings") || node.classList.contains("post-ratings-loading") ),
