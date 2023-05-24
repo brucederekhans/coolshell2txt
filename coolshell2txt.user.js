@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CoolShell2txt
 // @namespace    https://github.com/brucederekhans/coolshell2txt
-// @version      0.13
+// @version      0.16
 // @description  save an article in coolshell.cn as text file
 // @author       brucederekhans
 // @match        *://coolshell.cn/articles/*.html
@@ -11,6 +11,33 @@
 
 (function() {
     'use strict';
+
+    let styleElement = document.createElement("style");
+    styleElement.textContent = `
+    #downloadLinksContainer{
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 4em;
+    }
+    #downloadLinksContainer a{
+        margin: 1.5vh;
+        padding: 1vh;
+        font-size: 2.5vh;
+        border: 2px solid;
+        color: #607d8b;
+        background-color: #ffffff;
+        transition: color, background-color 0.5s;
+    }
+    #downloadLinksContainer a:hover{
+        color: #ffffff;
+        background-color: #607d8b;
+    }
+    `;
+    document.body.appendChild(styleElement);
+
+    let anchorsContainerElement = document.createElement("div");
+    anchorsContainerElement.id = "downloadLinksContainer";
+    document.querySelector(".post-content").insertBefore(anchorsContainerElement, document.querySelector(".entry-content"));
 
     let lastChildDiv1TextContent = document.querySelector(".entry-content > div:nth-last-child(1)").textContent;
     let lastChildDiv2TextContent = document.querySelector(".entry-content > div:nth-last-child(2)").textContent;
@@ -25,19 +52,19 @@
     textAnchorElement.href = URL.createObjectURL(textBlob);
     textAnchorElement.download = title;
     textAnchorElement.textContent = "save as text";
-    document.querySelector(".post-content").insertBefore(textAnchorElement, document.querySelector(".entry-content"));
+    anchorsContainerElement.appendChild(textAnchorElement);
 
     let markdownAnchorElement = document.createElement("a");
-    markdownAnchorElement.textContent = "save as markdown";
-    document.querySelector(".post-content").insertBefore(markdownAnchorElement, document.querySelector(".entry-content"));
+    markdownAnchorElement.textContent = "fetching markdown";
+    anchorsContainerElement.appendChild(markdownAnchorElement);
     let turndownService = new TurndownService();
     turndownService.addRule('deleteLastChildDivs', {
         filter: (node) => ( (node.id === "wp_rp_first") || node.classList.contains("post-ratings") || node.classList.contains("post-ratings-loading") ),
-        replacement:() => ""
+        replacement: () => ""
     });
     turndownService.addRule('backquoteCodeBlocks', {
         filter: (node) => node.classList.contains("EnlighterJSRAW"),
-        replacement:(content, node) => ("```" + node.dataset.enlighterLanguage + "\n" + node.textContent + "\n```")
+        replacement: (content, node) => ("```" + node.dataset.enlighterLanguage + "\n" + node.textContent + "\n```")
     });
     let markdown = turndownService.turndown(document.querySelector(".entry-content").innerHTML);
     let matchResults = [...markdown.matchAll(/!\[(.*?)\]\((.+?(\.(\w+))?)\)/g)];
@@ -88,5 +115,6 @@
         let markdownBlob = new Blob([markdown], {type:"text/markdown"});
         markdownAnchorElement.href = URL.createObjectURL(markdownBlob);
         markdownAnchorElement.download = title + ".md";
+        markdownAnchorElement.textContent = "save as markdown";
     });
 })();
