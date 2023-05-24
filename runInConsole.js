@@ -14,18 +14,18 @@ textAnchorElement.textContent = "save as text";
 document.querySelector(".post-content").insertBefore(textAnchorElement, document.querySelector(".entry-content"));
 
 let markdownAnchorElement = document.createElement("a");
-markdownAnchorElement.textContent = "save as markdown";
+markdownAnchorElement.textContent = "fetching markdown";
 document.querySelector(".post-content").insertBefore(markdownAnchorElement, document.querySelector(".entry-content"));
 let turndownScriptElement = document.createElement("script");
 turndownScriptElement.addEventListener("load", function(){
     let turndownService = new TurndownService();
     turndownService.addRule('deleteLastChildDivs', {
         filter: (node) => ( (node.id === "wp_rp_first") || node.classList.contains("post-ratings") || node.classList.contains("post-ratings-loading") ),
-        replacement:() => ""
+        replacement: () => ""
     });
     turndownService.addRule('backquoteCodeBlocks', {
         filter: (node) => node.classList.contains("EnlighterJSRAW"),
-        replacement:(content, node) => ("```" + node.dataset.enlighterLanguage + "\n" + node.textContent + "\n```")
+        replacement: (content, node) => ("```" + node.dataset.enlighterLanguage + "\n" + node.textContent + "\n```")
     });
     let markdown = turndownService.turndown(document.querySelector(".entry-content").innerHTML);
     let matchResults = [...markdown.matchAll(/!\[(.*?)\]\((.+?(\.(\w+))?)\)/g)];
@@ -76,6 +76,7 @@ turndownScriptElement.addEventListener("load", function(){
         let markdownBlob = new Blob([markdown], {type:"text/markdown"});
         markdownAnchorElement.href = URL.createObjectURL(markdownBlob);
         markdownAnchorElement.download = title + ".md";
+        markdownAnchorElement.textContent = "save as markdown";
     });
 });
 turndownScriptElement.src = "https://unpkg.com/turndown/dist/turndown.js";
