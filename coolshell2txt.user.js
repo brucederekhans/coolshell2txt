@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CoolShell2txt
 // @namespace    https://github.com/brucederekhans/coolshell2txt
-// @version      0.17
+// @version      0.18
 // @description  save an article in coolshell.cn as text file
 // @author       brucederekhans
 // @match        *://coolshell.cn/articles/*.html
@@ -57,11 +57,14 @@
     textAnchorElement.download = title;
     textAnchorElement.textContent = "save as text";
     anchorsContainerElementTop.appendChild(textAnchorElement);
-    anchorsContainerElementBottom.appendChild(textAnchorElement.cloneNode(true));
+    let textAnchorElementClone = textAnchorElement.cloneNode(true);
+    anchorsContainerElementBottom.appendChild(textAnchorElementClone);
 
     let markdownAnchorElement = document.createElement("a");
     markdownAnchorElement.textContent = "fetching markdown";
     anchorsContainerElementTop.appendChild(markdownAnchorElement);
+    let markdownAnchorElementClone = markdownAnchorElement.cloneNode(true);
+    anchorsContainerElementBottom.appendChild(markdownAnchorElementClone);
     let turndownService = new TurndownService();
     turndownService.addRule('deleteLastChildDivs', {
         filter: (node) => ( (node.id === "wp_rp_first") || node.classList.contains("post-ratings") || node.classList.contains("post-ratings-loading") ),
@@ -121,6 +124,8 @@
         markdownAnchorElement.href = URL.createObjectURL(markdownBlob);
         markdownAnchorElement.download = title + ".md";
         markdownAnchorElement.textContent = "save as markdown";
-        anchorsContainerElementBottom.appendChild(markdownAnchorElement.cloneNode(true));
+        markdownAnchorElementClone.href = markdownAnchorElement.href;
+        markdownAnchorElementClone.download = markdownAnchorElement.download;
+        markdownAnchorElementClone.textContent = markdownAnchorElement.textContent;
     });
 })();
