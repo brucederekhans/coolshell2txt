@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CoolShell2txt
 // @namespace    https://github.com/brucederekhans/coolshell2txt
-// @version      0.16
+// @version      0.17
 // @description  save an article in coolshell.cn as text file
 // @author       brucederekhans
 // @match        *://coolshell.cn/articles/*.html
@@ -14,12 +14,12 @@
 
     let styleElement = document.createElement("style");
     styleElement.textContent = `
-    #downloadLinksContainer{
+    .downloadLinksContainer{
         display: flex;
         justify-content: flex-end;
         padding: 0 4em;
     }
-    #downloadLinksContainer a{
+    .downloadLinksContainer a{
         margin: 1.5vh;
         padding: 1vh;
         font-size: 2.5vh;
@@ -28,16 +28,20 @@
         background-color: #ffffff;
         transition: color, background-color 0.5s;
     }
-    #downloadLinksContainer a:hover{
+    .downloadLinksContainer a:hover{
         color: #ffffff;
         background-color: #607d8b;
     }
     `;
     document.body.appendChild(styleElement);
 
-    let anchorsContainerElement = document.createElement("div");
-    anchorsContainerElement.id = "downloadLinksContainer";
-    document.querySelector(".post-content").insertBefore(anchorsContainerElement, document.querySelector(".entry-content"));
+    let anchorsContainerElementTop = document.createElement("div");
+    anchorsContainerElementTop.classList.add("downloadLinksContainer");
+    document.querySelector(".post-content").insertBefore(anchorsContainerElementTop, document.querySelector(".entry-content"));
+
+    let anchorsContainerElementBottom = document.createElement("div");
+    anchorsContainerElementBottom.classList.add("downloadLinksContainer");
+    document.querySelector(".entry-content").insertBefore(anchorsContainerElementBottom, document.querySelector("#wp_rp_first"));
 
     let lastChildDiv1TextContent = document.querySelector(".entry-content > div:nth-last-child(1)").textContent;
     let lastChildDiv2TextContent = document.querySelector(".entry-content > div:nth-last-child(2)").textContent;
@@ -52,11 +56,12 @@
     textAnchorElement.href = URL.createObjectURL(textBlob);
     textAnchorElement.download = title;
     textAnchorElement.textContent = "save as text";
-    anchorsContainerElement.appendChild(textAnchorElement);
+    anchorsContainerElementTop.appendChild(textAnchorElement);
+    anchorsContainerElementBottom.appendChild(textAnchorElement.cloneNode(true));
 
     let markdownAnchorElement = document.createElement("a");
     markdownAnchorElement.textContent = "fetching markdown";
-    anchorsContainerElement.appendChild(markdownAnchorElement);
+    anchorsContainerElementTop.appendChild(markdownAnchorElement);
     let turndownService = new TurndownService();
     turndownService.addRule('deleteLastChildDivs', {
         filter: (node) => ( (node.id === "wp_rp_first") || node.classList.contains("post-ratings") || node.classList.contains("post-ratings-loading") ),
@@ -116,5 +121,6 @@
         markdownAnchorElement.href = URL.createObjectURL(markdownBlob);
         markdownAnchorElement.download = title + ".md";
         markdownAnchorElement.textContent = "save as markdown";
+        anchorsContainerElementBottom.appendChild(markdownAnchorElement.cloneNode(true));
     });
 })();
