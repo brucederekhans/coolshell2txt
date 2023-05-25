@@ -43,11 +43,14 @@ textAnchorElement.href = URL.createObjectURL(textBlob);
 textAnchorElement.download = title;
 textAnchorElement.textContent = "save as text";
 anchorsContainerElementTop.appendChild(textAnchorElement);
-anchorsContainerElementBottom.appendChild(textAnchorElement.cloneNode(true));
+let textAnchorElementClone = textAnchorElement.cloneNode(true);
+anchorsContainerElementBottom.appendChild(textAnchorElementClone);
 
 let markdownAnchorElement = document.createElement("a");
 markdownAnchorElement.textContent = "fetching markdown";
 anchorsContainerElementTop.appendChild(markdownAnchorElement);
+let markdownAnchorElementClone = markdownAnchorElement.cloneNode(true);
+anchorsContainerElementBottom.appendChild(markdownAnchorElementClone);
 let turndownScriptElement = document.createElement("script");
 turndownScriptElement.addEventListener("load", function(){
     let turndownService = new TurndownService();
@@ -109,7 +112,9 @@ turndownScriptElement.addEventListener("load", function(){
         markdownAnchorElement.href = URL.createObjectURL(markdownBlob);
         markdownAnchorElement.download = title + ".md";
         markdownAnchorElement.textContent = "save as markdown";
-        anchorsContainerElementBottom.appendChild(markdownAnchorElement.cloneNode(true));
+        markdownAnchorElementClone.href = markdownAnchorElement.href;
+        markdownAnchorElementClone.download = markdownAnchorElement.download;
+        markdownAnchorElementClone.textContent = markdownAnchorElement.textContent;
     });
 });
 turndownScriptElement.src = "https://unpkg.com/turndown/dist/turndown.js";
