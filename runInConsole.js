@@ -32,11 +32,13 @@ document.querySelector(".post-content").insertBefore(anchorsContainerElementBott
 let lastChildDiv1TextContent = document.querySelector(".entry-content > div:nth-last-child(1)").textContent;
 let lastChildDiv2TextContent = document.querySelector(".entry-content > div:nth-last-child(2)").textContent;
 let lastChildDiv3TextContent = document.querySelector(".entry-content > div:nth-last-child(3)").textContent;
-let textContent = document.querySelector(".entry-content").textContent
+let title = document.querySelector(".entry-title").textContent;
+let metaList = document.querySelector(".entry-meta").textContent.split("\n");
+let metaJoined = "发表于" + metaList[1] + "作者 " + metaList[2];
+let textContent = title + "\n" + metaJoined + "\n" + document.querySelector(".entry-content").textContent
     .replace(lastChildDiv1TextContent, "")
     .replace(lastChildDiv2TextContent, "")
     .replace(lastChildDiv3TextContent, "");
-let title = document.querySelector(".entry-title").textContent;
 let textBlob = new Blob([textContent], {type:"text/plain"});
 let textAnchorElement = document.createElement("a");
 textAnchorElement.href = URL.createObjectURL(textBlob);
@@ -62,7 +64,7 @@ turndownScriptElement.addEventListener("load", function(){
         filter: (node) => node.classList.contains("EnlighterJSRAW"),
         replacement: (content, node) => ("```" + node.dataset.enlighterLanguage + "\n" + node.textContent + "\n```")
     });
-    let markdown = turndownService.turndown(document.querySelector(".entry-content").innerHTML);
+    let markdown = "# " + title + "\n\n> " + metaJoined + "\n\n" + turndownService.turndown(document.querySelector(".entry-content").innerHTML);
     let matchResults = [...markdown.matchAll(/!\[(.*?)\]\((.+?(\.(\w+))?)\)/g)];
     let imageElement = new Image();
     imageElement.crossOrigin = "anonymous";
