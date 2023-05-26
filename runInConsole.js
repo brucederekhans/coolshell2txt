@@ -27,7 +27,7 @@ document.querySelector(".post-content").insertBefore(anchorsContainerElementTop,
 
 let anchorsContainerElementBottom = document.createElement("div");
 anchorsContainerElementBottom.classList.add("downloadLinksContainer");
-document.querySelector(".entry-content").insertBefore(anchorsContainerElementBottom, document.querySelector("#wp_rp_first"));
+document.querySelector(".post-content").insertBefore(anchorsContainerElementBottom, document.querySelector(".entry-footer"));
 
 let lastChildDiv1TextContent = document.querySelector(".entry-content > div:nth-last-child(1)").textContent;
 let lastChildDiv2TextContent = document.querySelector(".entry-content > div:nth-last-child(2)").textContent;
