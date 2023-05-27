@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         CoolShell2txt
 // @namespace    https://github.com/brucederekhans/coolshell2txt
-// @version      0.20
+// @version      0.21
 // @description  save an article in coolshell.cn as text file
 // @author       brucederekhans
 // @match        *://coolshell.cn/articles/*.html
@@ -23,7 +23,7 @@
         margin: 1.5vh;
         padding: 1vh;
         font-size: 2.5vh;
-        border: 2px solid;
+        border: 2px solid #607d8b;
         color: #607d8b;
         background-color: #ffffff;
         transition: color, background-color 0.5s;

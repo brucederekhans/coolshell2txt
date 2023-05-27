@@ -9,7 +9,7 @@ styleElement.textContent = `
     margin: 1.5vh;
     padding: 1vh;
     font-size: 2.5vh;
-    border: 2px solid;
+    border: 2px solid #607d8b;
     color: #607d8b;
     background-color: #ffffff;
     transition: color, background-color 0.5s;
