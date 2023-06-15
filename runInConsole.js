@@ -56,12 +56,8 @@ anchorsContainerElementBottom.appendChild(markdownAnchorElementClone);
 let turndownScriptElement = document.createElement("script");
 turndownScriptElement.addEventListener("load", function(){
     let turndownService = new TurndownService();
-    turndownService.addRule('deleteLastChildDivs', {
-        filter: (node) => ( (node.id === "wp_rp_first") || node.classList.contains("post-ratings") || node.classList.contains("post-ratings-loading") ),
-        replacement: () => ""
-    });
-    turndownService.addRule('deleteVisibleCodeBlocks', {
-        filter: (node) => node.classList.contains("enlighter-default"),
+    turndownService.addRule('deleteElements', {
+        filter: (node) => ( (node.id === "wp_rp_first") || node.classList.contains("post-ratings") || node.classList.contains("post-ratings-loading") || node.classList.contains("enlighter-default") ),
         replacement: () => ""
     });
     turndownService.addRule('backquoteCodeBlocks', {
