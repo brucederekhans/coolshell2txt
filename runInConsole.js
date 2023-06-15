@@ -60,6 +60,10 @@ turndownScriptElement.addEventListener("load", function(){
         filter: (node) => ( (node.id === "wp_rp_first") || node.classList.contains("post-ratings") || node.classList.contains("post-ratings-loading") ),
         replacement: () => ""
     });
+    turndownService.addRule('deleteVisibleCodeBlocks', {
+        filter: (node) => node.classList.contains("enlighter-default"),
+        replacement: () => ""
+    });
     turndownService.addRule('backquoteCodeBlocks', {
         filter: (node) => node.classList.contains("EnlighterJSRAW"),
         replacement: (content, node) => ("```" + node.dataset.enlighterLanguage + "\n" + node.textContent + "\n```")
