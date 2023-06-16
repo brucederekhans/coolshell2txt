@@ -27,7 +27,6 @@ const fs = require('fs');
 		let articleInPageLinkList = await page.$$eval("article .entry-title > a", arr => arr.map(e => e.href));
 		articleLinkList = [...articleLinkList, ...articleInPageLinkList];
 	}
-	fs.writeFileSync("articleLinkList.txt", JSON.stringify(articleLinkList, null, "\t"));
 
 	await browser.close();
 })();
