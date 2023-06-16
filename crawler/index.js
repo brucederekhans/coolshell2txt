@@ -7,6 +7,7 @@ const puppeteer = require('puppeteer');
 	let pageLinkList;
 
 	let page = await browser.newPage();
+	page.setDefaultTimeout(300000);
 	await page.goto("https://coolshell.cn");
 	await page.content();
 
