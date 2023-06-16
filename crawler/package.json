@@ -1,0 +1,22 @@
+{
+  "name": "coolshellcrawler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brucederekhans/coolshell2txt.git"
+  },
+  "author": "brucederekhans",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brucederekhans/coolshell2txt/issues"
+  },
+  "homepage": "https://github.com/brucederekhans/coolshell2txt#readme",
+  "dependencies": {
+    "puppeteer": "^20.7.1"
+  }
+}
