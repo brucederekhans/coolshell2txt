@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/brucederekhans/coolshell2txt#readme",
   "dependencies": {
+    "fs": "^0.0.1-security",
     "puppeteer": "^20.7.1"
   }
 }

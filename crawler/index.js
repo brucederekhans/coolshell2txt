@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const fs = require('fs');
 
 (async () => {
 	const browser = await puppeteer.launch();
@@ -26,7 +27,7 @@ const puppeteer = require('puppeteer');
 		let articleInPageLinkList = await page.$$eval("article .entry-title > a", arr => arr.map(e => e.href));
 		articleLinkList = [...articleLinkList, ...articleInPageLinkList];
 	}
-	console.log(articleLinkList);
+	fs.writeFileSync("articleLinkList.txt", JSON.stringify(articleLinkList, null, "\t"));
 
 	await browser.close();
 })();
