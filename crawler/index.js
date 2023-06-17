@@ -107,7 +107,7 @@ const fs = require('fs');
 				});
 				return queueLoading;
 			});
-			fs.writeFileSync(evaluateResult.title + ".md", evaluateResult.markdown);
+			fs.writeFileSync((evaluateResult.title + ".md").replaceAll(/[<>:"/\\|?*]/g, "_"), evaluateResult.markdown);
 			retry = 0;
 		}
 		catch(e)
