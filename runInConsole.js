@@ -53,8 +53,18 @@ markdownAnchorElement.textContent = "fetching markdown";
 anchorsContainerElementTop.appendChild(markdownAnchorElement);
 let markdownAnchorElementClone = markdownAnchorElement.cloneNode(true);
 anchorsContainerElementBottom.appendChild(markdownAnchorElementClone);
-let turndownScriptElement = document.createElement("script");
-turndownScriptElement.addEventListener("load", function(){
+let imageElement = new Image();
+imageElement.crossOrigin = "anonymous";
+let canvasElement = document.createElement("canvas");
+let context = canvasElement.getContext("2d");
+
+let queueLoading = new Promise(function(resolve, reject){
+    let turndownScriptElement = document.createElement("script");
+    turndownScriptElement.addEventListener("load", resolve);
+    turndownScriptElement.src = "https://unpkg.com/turndown/dist/turndown.js";
+    document.body.appendChild(turndownScriptElement);
+})
+.then(() => {
     let turndownService = new TurndownService();
     turndownService.addRule('deleteElements', {
         filter: (node) => ( (node.id === "wp_rp_first") || node.classList.contains("post-ratings") || node.classList.contains("post-ratings-loading") || node.classList.contains("enlighter-default") ),
@@ -66,10 +76,6 @@ turndownScriptElement.addEventListener("load", function(){
     });
     let markdown = "# " + title + "\n\n> " + metaJoined + "\n\n" + turndownService.turndown(document.querySelector(".entry-content").innerHTML);
     let matchResults = [...markdown.matchAll(/!\[(.*?)\]\((.+?(\.(\w+))?)\)/g)];
-    let imageElement = new Image();
-    imageElement.crossOrigin = "anonymous";
-    let canvasElement = document.createElement("canvas");
-    let context = canvasElement.getContext("2d");
     let queueImagesLoading = Promise.resolve();
     matchResults.forEach(function(matchResult){
         queueImagesLoading = queueImagesLoading.then(() => new Promise(function(resolve, reject){
@@ -109,15 +115,14 @@ turndownScriptElement.addEventListener("load", function(){
         })
         .catch(() => undefined));
     });
-    queueImagesLoading.finally(() => {
-        let markdownBlob = new Blob([markdown], {type:"text/markdown"});
-        markdownAnchorElement.href = URL.createObjectURL(markdownBlob);
-        markdownAnchorElement.download = title + ".md";
-        markdownAnchorElement.textContent = "save as markdown";
-        markdownAnchorElementClone.href = markdownAnchorElement.href;
-        markdownAnchorElementClone.download = markdownAnchorElement.download;
-        markdownAnchorElementClone.textContent = markdownAnchorElement.textContent;
-    });
+    return queueImagesLoading.then(() => ({title, markdown}));
+})
+.then(({title, markdown}) => {
+	let markdownBlob = new Blob([markdown], {type:"text/markdown"});
+	markdownAnchorElement.href = URL.createObjectURL(markdownBlob);
+	markdownAnchorElement.download = title + ".md";
+	markdownAnchorElement.textContent = "save as markdown";
+	markdownAnchorElementClone.href = markdownAnchorElement.href;
+	markdownAnchorElementClone.download = markdownAnchorElement.download;
+	markdownAnchorElementClone.textContent = markdownAnchorElement.textContent;
 });
-turndownScriptElement.src = "https://unpkg.com/turndown/dist/turndown.js";
-document.body.appendChild(turndownScriptElement);
